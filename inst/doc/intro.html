@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Xia Jing" />
+
+<meta name="date" content="2024-12-08" />
+
+<title>Introduction to SA24204127</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to SA24204127</h1>
+<h4 class="author">Xia Jing</h4>
+<h4 class="date">2024-12-08</h4>
+
+
+
+<div id="least-squares-model-averaging-based-on-generalized-cross-validation" class="section level1">
+<h1>Least Squares Model Averaging Based on Generalized Cross
+Validation</h1>
+<p>Assume that the data generating process is</p>
+<p><span class="math display">\[
+y_i = \mu_i+e_i=\sum_{j=1}^\infty\theta_jx_{ij}+e_i,\ i=1,\cdots,n,
+\]</span></p>
+<p>Consider a sequence of linear approximating models m = 1,2,··· ,M,
+where the <span class="math inline">\(m_{th}\)</span> approximating
+model uses any km regressors belonging to <span class="math inline">\(x_i\)</span> such that <span class="math inline">\(k_m\)</span> &gt; 0 (note that these <span class="math inline">\(k_m\)</span> regressors are not necessarily the
+first <span class="math inline">\(k_m\)</span> ones). So the <span class="math inline">\(m_{th}\)</span> approximating model is <span class="math display">\[
+y_i = \sum_{j=1}^{k_m}\theta_{j(m)}x_{ij(m)}+e_i,\ ,i=1,\cdots,n,
+\]</span></p>
+<p>Let <span class="math inline">\(\hat\Theta_{(m)}=\left(X_{(m)}^{&#39;}X_{(m)}\right)^{-1}X_{(m)}^{&#39;}Y\)</span>
+be the least squares estimator of <span class="math inline">\(\Theta_{(m)}\)</span> based on the mth
+approximating model, then the corresponding least squares estimator of
+<span class="math inline">\(\mu\)</span> is <span class="math inline">\(\hat\mu_{(m)} = X_{(m)} \hat\Theta_{(m)} =
+X_{(m)}\left(X_{(m)}^{&#39;}X_{(m)}\right)^{-1}X_{(m)}^{&#39;}Y\equiv
+P_{(m)} Y\)</span>.</p>
+<p>Denote <span class="math inline">\(w =
+(w_1,\cdots,w_M)^{&#39;}\)</span>, a weight vector in the unit simplex
+in <span class="math inline">\(R^M\)</span>: <span class="math display">\[
+{\mathscr H}_n=\left\{w\in [0,1]^M:\sum_{m=1}^M w_m=1\right\}
+\]</span></p>
+<p>Then the least squares model average estimator of <span class="math inline">\(\mu\)</span> can be expressed as</p>
+<p><span class="math display">\[
+\hat \mu(w) = \sum_{m=1}^M w_m\hat \mu_{(m)}=\sum_{m=1}^M
+w_mP_{(m)}Y\equiv P(w) Y,
+\]</span></p>
+<p>We propose to choose a desired weight vector in a least squares model
+average estimator by minimizing the following criterion</p>
+<p><span class="math display">\[
+\mathscr L_n(w)=\|Y-\hat
+\mu(w)\|^2\left(1+2\frac{\text{tr}(P(w))}n\right)
+\]</span></p>
+<p><span class="math display">\[
+\hat w_{\mathscr L} = \underset{w\in \mathscr H_n}{\arg\min} \mathscr
+L_n(w)
+\]</span></p>
+</div>
+<div id="代码实现" class="section level1">
+<h1>代码实现</h1>
+<div id="原理" class="section level2">
+<h2>原理</h2>
+<p>上述问题可转化为： <span class="math display">\[
+\begin{array}{l}
+\min \mathscr L_n(w),\quad w\in R^M\\
+\text{s.t.}\ \ \sum_{m=1}^Mw_m-1=0\\
+\quad\quad w_m\ge0,\ m\in \{1,2,\cdots,M\}
+\end{array}
+\]</span> 使用外罚函数法求解该问题，构造罚函数 <span class="math display">\[
+\bar P(w)=(\sum_{m=1}^Mw_m-1)^2+\sum_{m=1}^M[\min\{0,w_m\}]^2
+\]</span> 和增广目标函数 <span class="math display">\[
+P(w,\sigma)=\mathscr L_n(w)+\sigma\bar P(w)
+\]</span></p>
+<p>外罚函数法具体步骤如下：</p>
+<ul>
+<li>步骤0，给定初始可行点 <span class="math inline">\(w_0\in
+R^M\)</span>，终止误差 <span class="math inline">\(0\le\varepsilon\ll1\)</span>，<span class="math inline">\(\sigma_1&gt;0,\gamma&gt;1\)</span>，令 <span class="math inline">\(k := 0\)</span>；</li>
+<li>步骤1，以 <span class="math inline">\(w_{k-1}\)</span>
+为初始点求解<span class="math inline">\(\min P(w,\sigma_k)=\mathscr
+L_n(w)+\sigma_k\bar P(w)\)</span>，得极小点为 <span class="math inline">\(w_k\)</span>；</li>
+<li>步骤2，若 <span class="math inline">\(\sigma_k\bar P(
+w_k)\le\varepsilon\)</span>，停算，输出 <span class="math inline">\(w^*\approx w_k\)</span>
+作为原问题的近似极小点；否则，转步骤3；</li>
+<li>步骤3，令 <span class="math inline">\(\sigma_{k+1}:=\gamma\sigma_k,k:=k+1\)</span>，转步骤1。</li>
+</ul>
+<p>在实际应用过程中，步骤1中使用<code>optim</code>函数进行优化，并将整个过程封装为一个函数，步骤二中判断过程也整体封装为一个函数。</p>
+</div>
+<div id="函数" class="section level2">
+<h2>函数</h2>
+<p>R函数定义如下：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>my_RFunction <span class="ot">&lt;-</span> <span class="cf">function</span>(x0, lossf, need_func1, need_func2, </span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                         <span class="at">epsilon=</span><span class="fl">1e-6</span>, <span class="at">sigma=</span><span class="fl">0.5</span>, <span class="at">gamma=</span><span class="fl">1.1</span>, </span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                         <span class="at">MAX_ITER =</span> <span class="dv">1000</span>) {</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    xnew <span class="ot">=</span> x0</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>MAX_ITER){</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>        xnew <span class="ot">=</span> <span class="fu">need_func1</span>(xnew,sigma,lossf)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>        <span class="cf">if</span> (<span class="fu">need_func2</span>(xnew,epsilon<span class="sc">/</span>sigma)){<span class="cf">break</span>}</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>        sigma <span class="ot">=</span> gamma<span class="sc">*</span>sigma</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    }</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>    <span class="fu">return</span>(xnew)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>}</span></code></pre></div>
+<p>同理，C++函数定义如下：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;Rcpp.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> Rcpp<span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">// [[Rcpp::export]]</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>NumericVector my_CppFunction<span class="op">(</span>NumericVector x0<span class="op">,</span> </span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>                             Function lossf<span class="op">,</span> </span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>                             Function need_func1<span class="op">,</span> </span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>                             Function need_func2<span class="op">,</span> </span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>                             <span class="dt">float</span> epsilon<span class="op">=</span><span class="fl">1e-6</span><span class="op">,</span> </span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>                             <span class="dt">float</span> sigma<span class="op">=</span><span class="fl">0.5</span><span class="op">,</span> </span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>                             <span class="dt">float</span> gamma<span class="op">=</span><span class="fl">1.1</span><span class="op">,</span> </span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>                             <span class="dt">int</span> MAX_ITER <span class="op">=</span> <span class="dv">1000</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>    NumericVector xnew <span class="op">=</span> x0<span class="op">;</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> MAX_ITER<span class="op">;</span> i<span class="op">++){</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>        xnew <span class="op">=</span> need_func1<span class="op">(</span>xnew<span class="op">,</span>sigma<span class="op">,</span>lossf<span class="op">);</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>        LogicalVector flag <span class="op">=</span> need_func2<span class="op">(</span>xnew<span class="op">,</span>epsilon<span class="op">/</span>sigma<span class="op">);</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>flag<span class="op">[</span><span class="dv">0</span><span class="op">]){</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>        sigma <span class="op">=</span> gamma<span class="op">*</span>sigma<span class="op">;</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>    <span class="cf">return</span> xnew<span class="op">;</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>其中<code>x0</code>表示初始值，<code>lossf</code>表示目标函数，<code>need_func1</code>表示步骤一函数，<code>need.func2</code>表示步骤二函数，<code>epsilon</code>、<code>sigma</code>、<code>gamma</code>表示算法参数，<code>MAX_ITER</code>表示最大迭代次数。</p>
+<p>求解基于GCV的最小二乘模型平均的函数定义如下：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>LMA.Function <span class="ot">&lt;-</span> <span class="cf">function</span>(y, xmatrix, <span class="at">model.list=</span><span class="cn">NULL</span>, <span class="at">use.func=</span>my_RFunction){</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>    out1 <span class="ot">&lt;-</span> <span class="fu">step.1.function</span>(<span class="at">y=</span>y, <span class="at">xmatrix=</span>xmatrix, <span class="at">model.list=</span>model.list)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    error.matrix <span class="ot">&lt;-</span> out1[[<span class="dv">1</span>]]</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    s <span class="ot">&lt;-</span> out1[[<span class="dv">2</span>]]</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    w0 <span class="ot">&lt;-</span> out1[[<span class="dv">3</span>]]</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    loss.func <span class="ot">&lt;-</span> <span class="cf">function</span>(w){<span class="fu">loss.ln</span>(<span class="at">w=</span>w,<span class="at">error.matrix=</span>error.matrix,<span class="at">s=</span>s)}</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    out.w <span class="ot">&lt;-</span> <span class="fu">use.func</span>(w0, loss.func, func1, func2)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="fu">return</span>(out.w)</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>}</span></code></pre></div>
+<p>其中<code>y</code>表示自变量，<code>xmatrix</code>表示因变量，<code>model.list</code>表示模型列表，即list(<span class="math inline">\(v_1,v_2,\cdots,v_M\)</span>)，列表元素为向量，每一个向量代表一个模型，<span class="math inline">\(v_i\)</span> 对应的模型使用的自变量为
+<code>xmatrix</code>[,<span class="math inline">\(v_i\)</span>]；默认为
+NULL，等价于
+<code>list(c(1),c(1,2),...,c(1,2,...,p))</code>，<code>use.func</code>表示使用的最优化函数，<code>my_RFunction</code>
+或 <code>my_CppFunction</code>。</p>
+</div>
+<div id="示例" class="section level2">
+<h2>示例</h2>
+<p>数据生成：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">11</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p){</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    theta[i] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="dv">2</span><span class="sc">*</span>alpha)<span class="sc">*</span>i<span class="sc">^</span>(<span class="sc">-</span>alpha<span class="fl">-0.5</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>}</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">24204127</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>xmatrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow=</span>n, <span class="at">ncol =</span> p)</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>xmatrix[,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>xmatrix[,<span class="sc">-</span><span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n<span class="sc">*</span>(p<span class="dv">-1</span>)),<span class="at">nrow=</span>n)</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>error <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(xmatrix <span class="sc">%*%</span> theta <span class="sc">+</span> error)</span></code></pre></div>
+<p>使用R和Rcpp函数计算权重：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">library</span>(SA24204127)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">## R 函数</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">LMA.Function</span>(y,xmatrix)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">## C++ 函数</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>wcpp <span class="ot">&lt;-</span> <span class="fu">LMA.Function</span>(y,xmatrix,<span class="at">use.func =</span> my_CppFunction)</span></code></pre></div>
+<p>两者比较：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># 比较</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">library</span>(microbenchmark)</span></code></pre></div>
+<pre><code>## Warning: package &#39;microbenchmark&#39; was built under R version 4.3.3</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>ts <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="at">meanR=</span><span class="fu">LMA.Function</span>(y,xmatrix),</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">meanC=</span><span class="fu">LMA.Function</span>(y,xmatrix,<span class="at">use.func =</span> my_CppFunction)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  )</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">summary</span>(ts)[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">6</span>)]</span></code></pre></div>
+<pre><code>##    expr       lq   median       uq
+## 1 meanR 2.636118 2.644639 2.666444
+## 2 meanC 2.351109 2.356058 2.364263</code></pre>
+<p>容易看出，Rcpp函数耗时较小。</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

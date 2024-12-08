@@ -1,0 +1,17 @@
+Package: SA24204127
+Type: Package
+Title: SA24204127-Package
+Version: 1.0
+Date: 2024-12-07
+Author: Xia Jing
+Maintainer: Xia Jing <1537757922@qq.com>
+Description: Least Squares Model Averaging Based on Generalized Cross Validation.
+License: GPL (>= 2)
+Imports: Rcpp
+LinkingTo: Rcpp
+RoxygenNote: 7.3.2
+Encoding: UTF-8
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+URL: http://github.com/XiaJing-xj/SA24204127
+BugReports: http://github.com/XiaJing-xj/SA24204127/issues

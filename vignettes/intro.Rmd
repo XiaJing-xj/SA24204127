@@ -1,0 +1,178 @@
+---
+title: "Introduction to SA24204127"
+author: "Xia Jing"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to SA24204127}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Least Squares Model Averaging Based on Generalized Cross Validation
+
+Assume that the data generating process is
+
+$$
+y_i = \mu_i+e_i=\sum_{j=1}^\infty\theta_jx_{ij}+e_i,\ i=1,\cdots,n,
+$$
+
+Consider a sequence of linear approximating models m = 1,2,··· ,M, where the $m_{th}$ approximating model uses any km regressors belonging to $x_i$ such that $k_m$ > 0 (note that these $k_m$ regressors are not necessarily the first $k_m$ ones). So the $m_{th}$ approximating model is
+$$
+y_i = \sum_{j=1}^{k_m}\theta_{j(m)}x_{ij(m)}+e_i,\ ,i=1,\cdots,n,
+$$
+
+Let $\hat\Theta_{(m)}=\left(X_{(m)}^{'}X_{(m)}\right)^{-1}X_{(m)}^{'}Y$ be the least squares estimator of $\Theta_{(m)}$ based on the mth approximating model, then the corresponding least squares estimator of $\mu$ is
+$\hat\mu_{(m)} = X_{(m)} \hat\Theta_{(m)} = X_{(m)}\left(X_{(m)}^{'}X_{(m)}\right)^{-1}X_{(m)}^{'}Y\equiv P_{(m)} Y$.
+
+Denote $w = (w_1,\cdots,w_M)^{'}$, a weight vector in the unit simplex in $R^M$:
+$$
+{\mathscr H}_n=\left\{w\in [0,1]^M:\sum_{m=1}^M w_m=1\right\}
+$$
+
+Then the least squares model average estimator of $\mu$ can be expressed as
+
+$$
+\hat \mu(w) = \sum_{m=1}^M w_m\hat \mu_{(m)}=\sum_{m=1}^M w_mP_{(m)}Y\equiv P(w) Y,
+$$
+
+We propose to choose a desired weight vector in a least squares model average estimator by minimizing the following criterion
+
+$$
+\mathscr L_n(w)=\|Y-\hat \mu(w)\|^2\left(1+2\frac{\text{tr}(P(w))}n\right)
+$$
+
+$$
+\hat w_{\mathscr L} = \underset{w\in \mathscr H_n}{\arg\min} \mathscr L_n(w)
+$$
+
+# 代码实现
+
+## 原理
+上述问题可转化为：
+$$
+\begin{array}{l}
+\min \mathscr L_n(w),\quad w\in R^M\\
+\text{s.t.}\ \ \sum_{m=1}^Mw_m-1=0\\
+\quad\quad w_m\ge0,\ m\in \{1,2,\cdots,M\}
+\end{array}
+$$
+使用外罚函数法求解该问题，构造罚函数
+$$
+\bar P(w)=(\sum_{m=1}^Mw_m-1)^2+\sum_{m=1}^M[\min\{0,w_m\}]^2
+$$
+和增广目标函数
+$$
+P(w,\sigma)=\mathscr L_n(w)+\sigma\bar P(w)
+$$
+
+外罚函数法具体步骤如下：
+
+- 步骤0，给定初始可行点 $w_0\in R^M$，终止误差 $0\le\varepsilon\ll1$，$\sigma_1>0,\gamma>1$，令 $k := 0$；
+- 步骤1，以 $w_{k-1}$ 为初始点求解$\min P(w,\sigma_k)=\mathscr L_n(w)+\sigma_k\bar P(w)$，得极小点为 $w_k$；
+- 步骤2，若 $\sigma_k\bar P( w_k)\le\varepsilon$，停算，输出 $w^*\approx w_k$ 作为原问题的近似极小点；否则，转步骤3；
+- 步骤3，令 $\sigma_{k+1}:=\gamma\sigma_k,k:=k+1$，转步骤1。
+
+在实际应用过程中，步骤1中使用`optim`函数进行优化，并将整个过程封装为一个函数，步骤二中判断过程也整体封装为一个函数。
+
+## 函数
+
+R函数定义如下：
+```{r, eval=FALSE}
+my_RFunction <- function(x0, lossf, need_func1, need_func2, 
+                         epsilon=1e-6, sigma=0.5, gamma=1.1, 
+                         MAX_ITER = 1000) {
+    xnew = x0
+    for(i in 1:MAX_ITER){
+        xnew = need_func1(xnew,sigma,lossf)
+        if (need_func2(xnew,epsilon/sigma)){break}
+        sigma = gamma*sigma
+    }
+    return(xnew)
+}
+```
+
+同理，C++函数定义如下：
+
+```{Rcpp, eval=FALSE}
+#include <Rcpp.h>
+using namespace Rcpp;
+// [[Rcpp::export]]
+NumericVector my_CppFunction(NumericVector x0, 
+                             Function lossf, 
+                             Function need_func1, 
+                             Function need_func2, 
+                             float epsilon=1e-6, 
+                             float sigma=0.5, 
+                             float gamma=1.1, 
+                             int MAX_ITER = 1000) {
+    NumericVector xnew = x0;
+    for(int i = 0; i < MAX_ITER; i++){
+        xnew = need_func1(xnew,sigma,lossf);
+        LogicalVector flag = need_func2(xnew,epsilon/sigma);
+        if (flag[0]){
+            break;
+        }
+        sigma = gamma*sigma;
+    }
+    return xnew;
+}
+```
+其中`x0`表示初始值，`lossf`表示目标函数，`need_func1`表示步骤一函数，`need.func2`表示步骤二函数，`epsilon`、`sigma`、`gamma`表示算法参数，`MAX_ITER`表示最大迭代次数。
+
+
+求解基于GCV的最小二乘模型平均的函数定义如下：
+```{r, eval=FALSE}
+LMA.Function <- function(y, xmatrix, model.list=NULL, use.func=my_RFunction){
+    out1 <- step.1.function(y=y, xmatrix=xmatrix, model.list=model.list)
+    error.matrix <- out1[[1]]
+    s <- out1[[2]]
+    w0 <- out1[[3]]
+    loss.func <- function(w){loss.ln(w=w,error.matrix=error.matrix,s=s)}
+    out.w <- use.func(w0, loss.func, func1, func2)
+    return(out.w)
+}
+```
+
+其中`y`表示自变量，`xmatrix`表示因变量，`model.list`表示模型列表，即list($v_1,v_2,\cdots,v_M$)，列表元素为向量，每一个向量代表一个模型，$v_i$ 对应的模型使用的自变量为 `xmatrix`[,$v_i$]；默认为 NULL，等价于 `list(c(1),c(1,2),...,c(1,2,...,p))`，`use.func`表示使用的最优化函数，`my_RFunction` 或 `my_CppFunction`。
+
+## 示例
+
+数据生成：
+```{r, eval=TRUE}
+n <- 50
+p <- 11
+alpha <- 0.1
+theta <- numeric(p)
+for (i in 1:p){
+    theta[i] <- sqrt(2*alpha)*i^(-alpha-0.5)
+}
+set.seed(24204127)
+xmatrix <- matrix(nrow=n, ncol = p)
+xmatrix[,1] <- 1
+xmatrix[,-1] <- matrix(rnorm(n*(p-1)),nrow=n)
+error <- rnorm(n)
+y <- as.vector(xmatrix %*% theta + error)
+```
+
+使用R和Rcpp函数计算权重：
+```{r, eval=TRUE}
+library(SA24204127)
+## R 函数
+w <- LMA.Function(y,xmatrix)
+## C++ 函数
+wcpp <- LMA.Function(y,xmatrix,use.func = my_CppFunction)
+```
+
+两者比较：
+```{r, eval=TRUE}
+# 比较
+library(microbenchmark)
+ts <- microbenchmark(
+  meanR=LMA.Function(y,xmatrix),
+  meanC=LMA.Function(y,xmatrix,use.func = my_CppFunction)
+  )
+summary(ts)[,c(1,3,5,6)]
+```
+
+容易看出，Rcpp函数耗时较小。
